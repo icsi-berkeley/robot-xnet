@@ -226,6 +226,19 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Resume">
             <graphics>
@@ -246,6 +259,19 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Suspend">
             <graphics>
@@ -266,6 +292,20 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+
         </place>
         <place id="Suspended">
             <graphics>
@@ -286,6 +326,19 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <transition id="Start">
             <graphics>
@@ -364,7 +417,7 @@
             <rate>
                 <value>1</value>
             </rate>
-          <toolspecific tool="PIPE" version="5" externalClass="edu.berkeley.icsi.xschema.MoveMorseExternalTransition"/>
+        <toolspecific tool="PIPE" version="5" externalClass="edu.berkeley.icsi.xnet.MoveExternalTransition"/>
         </transition>
         <transition id="Finish">
             <graphics>
@@ -443,6 +496,7 @@
             <rate>
                 <value>1</value>
             </rate>
+        <toolspecific tool="PIPE" version="5" externalClass="edu.berkeley.icsi.xnet.ResumeExternalTransition"/>
         </transition>
         <transition id="SuspendT">
             <graphics>
@@ -469,6 +523,7 @@
             <rate>
                 <value>1</value>
             </rate>
+        <toolspecific tool="PIPE" version="5" externalClass="edu.berkeley.icsi.xnet.SuspendExternalTransition"/>
         </transition>
         <transition id="RestartT">
             <graphics>
@@ -495,6 +550,7 @@
             <rate>
                 <value>1</value>
             </rate>
+        <toolspecific tool="PIPE" version="5" externalClass="edu.berkeley.icsi.xnet.RestartExternalTransition"/>
         </transition>
         <arc id="RestartT TO Ready" source="RestartT" target="Ready">
             <arcpath id="" x="289.0" y="142.0" curvePoint="false"/>

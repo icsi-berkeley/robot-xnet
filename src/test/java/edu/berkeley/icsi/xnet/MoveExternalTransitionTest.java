@@ -17,37 +17,18 @@ import uk.ac.imperial.pipe.models.petrinet.ExecutablePetriNet;
 import uk.ac.imperial.pipe.models.petrinet.ExternalTransition;
 import uk.ac.imperial.pipe.models.petrinet.PetriNet;
 
-public class MoveExternalTransitionTest implements Morse {
+public class MoveExternalTransitionTest extends AbstractExternalTransitionTest {
 
-	private MoveExternalTransition mcet;
-	private PetriNet net;
-	private ExecutablePetriNet epn;
-	private MorseChannel morseChannel;
-
-	@Before
-	public void setUp() throws Exception {
-		net = buildNet();
-		epn = net.getExecutablePetriNet(); 
-		mcet = new MoveExternalTransition(); 
-		mcet.setExecutablePetriNet(epn);
-		morseChannel = new MorseChannel(); 
-		mcet.setContext(morseChannel);
-	}
-
-	@Test
-	public void verifyMarksPlaceWithOneDefaultToken() throws Exception {
-		assertEquals(0, epn.getState().getTokens("P1").get("Default").intValue()); 
-		mcet.markPlace("P1"); 
-		assertEquals(1, epn.getState().getTokens("P1").get("Default").intValue()); 
-	}
 	@Test
 	public void verifyCallsMorseWithMoveCommand() {
 		TestingMorse morse = new TestingMorse();
 		morseChannel.updateTargetLocation(6.7, 8.9); 
 		morseChannel.setMorse(morse); 
-		mcet.fire();
+		externalTransition.fire();
 		assertTrue(morse.wasCalled()); 
-		assertEquals("{\"command\":\"move\",\"location\":{\"x\":6.7,\"y\":8.9}}", morse.lastCommand()); 
+		assertEquals("{\"command\":\"moveMorse\",\"location\":{\"x\":6.7,\"y\":8.9}}", morse.lastCommand()); 
+//		assertEquals("{\"command\":\"moveMorse\",\"location\":{\"x\":6.7,\"y\":8.9,\"z\":0.0}}", morse.lastCommand()); 
+		// 'collide':False, 'speed':2.0, 'tolerance':4
 	}
 	@Test
 	public void updatesCurrentAndTargetLocations() {
@@ -63,17 +44,10 @@ public class MoveExternalTransitionTest implements Morse {
 		assertEquals(8.9, morseChannel.getTargetY(), 0.01); 
 	}
 
-    private PetriNet buildNet() {
-    	PetriNet net = APetriNet.named("testnet").and(AToken.called("Default").withColor(Color.BLACK)).and(APlace.withId("P0").containing(1, "Default").token()).
-    			and(APlace.withId("P1").externallyAccessible()).and(AnImmediateTransition.withId("T0")).
-    			and(ANormalArc.withSource("P0").andTarget("T0").with("1", "Default").token()).
-    			andFinally(ANormalArc.withSource("T0").andTarget("P1").with("1", "Default").token());
-    	return net; 
-    }
 
 	@Override
-	public void callMorse(String command) {
-		
+	protected ExternalTransition buildExternalTransition() {
+		return new MoveExternalTransition();
 	}
 
 }
