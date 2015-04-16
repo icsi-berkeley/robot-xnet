@@ -16,18 +16,21 @@ import uk.ac.imperial.pipe.exceptions.PetriNetComponentNotFoundException;
 import uk.ac.imperial.pipe.models.petrinet.ExecutablePetriNet;
 import uk.ac.imperial.pipe.models.petrinet.ExternalTransition;
 import uk.ac.imperial.pipe.models.petrinet.PetriNet;
+import uk.ac.imperial.pipe.models.petrinet.Place;
 
 public class MoveExternalTransitionTest extends AbstractExternalTransitionTest {
 
 	@Test
 	public void verifyCallsMorseWithMoveCommand() {
-		TestingMorse morse = new TestingMorse();
 		morseChannel.updateTargetLocation(6.7, 8.9); 
+		morseChannel.setSpeed(2.0); 
+		morseChannel.setTolerance(4.0);
+		morseChannel.setCollide(false);
 		morseChannel.setMorse(morse); 
 		externalTransition.fire();
 		assertTrue(morse.wasCalled()); 
-		assertEquals("{\"command\":\"moveMorse\",\"location\":{\"x\":6.7,\"y\":8.9}}", morse.lastCommand()); 
-//		assertEquals("{\"command\":\"moveMorse\",\"location\":{\"x\":6.7,\"y\":8.9,\"z\":0.0}}", morse.lastCommand()); 
+//		assertEquals("{\"command\":\"moveMorse\",\"location\":{\"x\":6.7,\"y\":8.9}}", morse.lastCommand()); 
+		assertEquals("{\"command\":\"moveMorse\",\"motion\":{\"x\":6.7,\"y\":8.9,\"z\":0.0,\"collide\":false,\"speed\":2.0,\"tolerance\":4.0}}", morse.lastCommand()); 
 		// 'collide':False, 'speed':2.0, 'tolerance':4
 	}
 	@Test
@@ -43,7 +46,33 @@ public class MoveExternalTransitionTest extends AbstractExternalTransitionTest {
 		assertEquals(6.7, morseChannel.getTargetX(), 0.01); 
 		assertEquals(8.9, morseChannel.getTargetY(), 0.01); 
 	}
-
+	@Test
+	public void updatesOngoingStatusAndCommand() {
+		assertNull(morse.lastCommand()); 
+		assertEquals(MorseChannel.NOT_STARTED, morseChannel.getStatus());
+		morseChannel.updateTargetLocation(6.7, 8.9); 
+		externalTransition.fire();
+		assertEquals(MorseChannel.ONGOING, morseChannel.getStatus());
+	}
+	@Test
+	public void whileOngoingAfterFirstMoveCommandSubsequentCommandsAreToUpdatePosition() {
+		morseChannel.updateTargetLocation(6.7, 8.9); 
+		externalTransition.fire();
+		assertEquals(MorseChannel.ONGOING, morseChannel.getStatus());
+		assertEquals("{\"command\":\"moveMorse\",\"motion\":{\"x\":6.7,\"y\":8.9,\"z\":0.0,\"collide\":false,\"speed\":0.0,\"tolerance\":0.0}}", morse.lastCommand()); 
+		externalTransition.fire();
+		assertEquals(MorseChannel.ONGOING, morseChannel.getStatus());
+		assertEquals("{\"command\":\"updateMorsePosition\"}", morse.lastCommand()); 
+	}
+	@Test
+	public void whenStatusIsDoneMarksArrivedPlace() throws Exception {
+		assertEquals(0, epn.getComponent("Arrived", Place.class).getTokenCount("Default")); 
+		morseChannel.setStatus(MorseChannel.ARRIVED);
+		externalTransition.fire();
+		assertFalse(morse.wasCalled());
+		assertEquals(1, epn.getComponent("Arrived", Place.class).getTokenCount("Default")); 
+	}
+	
 
 	@Override
 	protected ExternalTransition buildExternalTransition() {

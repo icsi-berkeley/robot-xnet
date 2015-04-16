@@ -12,12 +12,13 @@ import uk.ac.imperial.pipe.dsl.AnImmediateTransition;
 import uk.ac.imperial.pipe.models.petrinet.ExecutablePetriNet;
 import uk.ac.imperial.pipe.models.petrinet.ExternalTransition;
 import uk.ac.imperial.pipe.models.petrinet.PetriNet;
+import uk.ac.imperial.pipe.models.petrinet.Place;
 
 public abstract class AbstractExternalTransitionTest {
 
 	protected ExternalTransition externalTransition;
 	private PetriNet net;
-	private ExecutablePetriNet epn;
+	protected ExecutablePetriNet epn;
 	protected MorseChannel morseChannel;
 	protected TestingMorse morse;
 
@@ -37,7 +38,7 @@ public abstract class AbstractExternalTransitionTest {
 
 	private PetriNet buildNet() {
 		PetriNet net = APetriNet.named("testnet").and(AToken.called("Default").withColor(Color.BLACK)).and(APlace.withId("P0").containing(1, "Default").token()).
-				and(APlace.withId("P1").externallyAccessible()).and(AnImmediateTransition.withId("T0")).
+				and(APlace.withId("Arrived")).and(APlace.withId("P1").externallyAccessible()).and(AnImmediateTransition.withId("T0")).
 				and(ANormalArc.withSource("P0").andTarget("T0").with("1", "Default").token()).
 				andFinally(ANormalArc.withSource("T0").andTarget("P1").with("1", "Default").token());
 		return net; 
