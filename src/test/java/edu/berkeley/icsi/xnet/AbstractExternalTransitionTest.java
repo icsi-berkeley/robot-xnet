@@ -12,7 +12,6 @@ import uk.ac.imperial.pipe.dsl.AnImmediateTransition;
 import uk.ac.imperial.pipe.models.petrinet.ExecutablePetriNet;
 import uk.ac.imperial.pipe.models.petrinet.ExternalTransition;
 import uk.ac.imperial.pipe.models.petrinet.PetriNet;
-import uk.ac.imperial.pipe.models.petrinet.Place;
 
 public abstract class AbstractExternalTransitionTest {
 
@@ -21,15 +20,18 @@ public abstract class AbstractExternalTransitionTest {
 	protected ExecutablePetriNet epn;
 	protected MorseChannel morseChannel;
 	protected TestingMorse morse;
+	protected TestingExternalTransitionProvider externalTransitionProvider;
 
 	@Before
 	public void setUp() throws Exception {
 		net = buildNet();
 		epn = net.getExecutablePetriNet(); 
-		externalTransition = buildExternalTransition(); 
-		externalTransition.setExecutablePetriNet(epn);
+		externalTransitionProvider = new TestingExternalTransitionProvider();
+		externalTransition = buildExternalTransition();
+		externalTransitionProvider.setExecutablePetriNet(epn);
 		morseChannel = new MorseChannel(); 
-		externalTransition.setContext(morseChannel);
+		externalTransitionProvider.setContext(morseChannel);
+		externalTransition.setExternalTransitionProvider(externalTransitionProvider);
 		morse = new TestingMorse();
 		morseChannel.setMorse(morse); 
 	}

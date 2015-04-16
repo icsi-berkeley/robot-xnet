@@ -17,8 +17,10 @@ import uk.ac.imperial.pipe.models.petrinet.ExecutablePetriNet;
 import uk.ac.imperial.pipe.models.petrinet.ExternalTransition;
 import uk.ac.imperial.pipe.models.petrinet.PetriNet;
 import uk.ac.imperial.pipe.models.petrinet.Place;
+import uk.ac.imperial.pipe.runner.InterfaceException;
+import uk.ac.imperial.pipe.runner.PlaceMarker;
 
-public class MoveExternalTransitionTest extends AbstractExternalTransitionTest {
+public class MoveExternalTransitionTest extends AbstractExternalTransitionTest implements PlaceMarker {
 
 	@Test
 	public void verifyCallsMorseWithMoveCommand() {
@@ -68,6 +70,7 @@ public class MoveExternalTransitionTest extends AbstractExternalTransitionTest {
 	public void whenStatusIsDoneMarksArrivedPlace() throws Exception {
 		assertEquals(0, epn.getComponent("Arrived", Place.class).getTokenCount("Default")); 
 		morseChannel.setStatus(MorseChannel.ARRIVED);
+		externalTransitionProvider.setPlaceMarker(this);
 		externalTransition.fire();
 		assertFalse(morse.wasCalled());
 		assertEquals(1, epn.getComponent("Arrived", Place.class).getTokenCount("Default")); 
@@ -77,6 +80,19 @@ public class MoveExternalTransitionTest extends AbstractExternalTransitionTest {
 	@Override
 	protected ExternalTransition buildExternalTransition() {
 		return new MoveExternalTransition();
+	}
+	@Override
+	public void markPlace(String placeId, String token, int count)
+			throws InterfaceException {
+		try {
+//	System.out.println("before mark"+executablePetriNet.getComponent(ARRIVED, Place.class).getTokenCount(DEFAULT));
+	epn.getComponent(MoveExternalTransition.ARRIVED, Place.class).setTokenCount(MoveExternalTransition.DEFAULT, 1);
+//	System.out.println("after mark"+executablePetriNet.getComponent(ARRIVED, Place.class).getTokenCount(DEFAULT));
+//	System.out.println("MoveExternalTransition.fire: arrives"+this.morseChannel.getStatus());
+} catch (PetriNetComponentNotFoundException e) {
+	throw new RuntimeException("MoveExternalTransition.fire: attempted to mark "+MoveExternalTransition.ARRIVED+" place, but it was not found.");
+}
+
 	}
 
 }

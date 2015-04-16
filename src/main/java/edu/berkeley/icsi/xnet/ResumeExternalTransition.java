@@ -13,7 +13,7 @@ public class ResumeExternalTransition extends AbstractExternalTransition {
 
 	@Override
 	public void fire() {
-		this.morseChannel = (MorseChannel) context; 
+		this.morseChannel = (MorseChannel) getExternalTransitionProvider().getContext(); 
 		this.morseChannel.getMorse().callMorse(buildMoveCommand()); 
 	}
 

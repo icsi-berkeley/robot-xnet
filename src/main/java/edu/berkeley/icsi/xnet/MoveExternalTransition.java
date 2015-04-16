@@ -7,6 +7,7 @@ import javax.json.JsonValue;
 import uk.ac.imperial.pipe.exceptions.PetriNetComponentNotFoundException;
 import uk.ac.imperial.pipe.models.petrinet.AbstractExternalTransition;
 import uk.ac.imperial.pipe.models.petrinet.Place;
+import uk.ac.imperial.pipe.runner.InterfaceException;
 
 public class MoveExternalTransition extends AbstractExternalTransition {
 
@@ -21,13 +22,13 @@ public class MoveExternalTransition extends AbstractExternalTransition {
 	private static final String TOLERANCE = "tolerance";
 	private static final String SPEED = "speed";
 	private static final String COLLIDE = "collide";
-	private static final String ARRIVED = "Arrived";
-	private static final String DEFAULT = "Default";
+	protected static final String ARRIVED = "Arrived";
+	protected static final String DEFAULT = "Default";
 	private MorseChannel morseChannel;
 
 	@Override
 	public void fire() {
-		this.morseChannel = (MorseChannel) context; 
+		this.morseChannel = (MorseChannel) getExternalTransitionProvider().getContext(); 
 		if (this.morseChannel.getStatus() == MorseChannel.NOT_STARTED) {
 			this.morseChannel.setStatus(MorseChannel.ONGOING); 
 			this.morseChannel.getMorse().callMorse(buildMoveCommand()); 
@@ -37,13 +38,18 @@ public class MoveExternalTransition extends AbstractExternalTransition {
 		}
 		else if (this.morseChannel.getStatus() == MorseChannel.ARRIVED) {
 			try {
-//				System.out.println("before mark"+executablePetriNet.getComponent(ARRIVED, Place.class).getTokenCount(DEFAULT));
-				executablePetriNet.getComponent(ARRIVED, Place.class).setTokenCount(DEFAULT, 1);
-//				System.out.println("after mark"+executablePetriNet.getComponent(ARRIVED, Place.class).getTokenCount(DEFAULT));
-//				System.out.println("MoveExternalTransition.fire: arrives"+this.morseChannel.getStatus());
-			} catch (PetriNetComponentNotFoundException e) {
-				throw new RuntimeException("MoveExternalTransition.fire: attempted to mark "+ARRIVED+" place, but it was not found.");
+				getExternalTransitionProvider().getPlaceMarker().markPlace("Arrived", "Default", 2);
+			} catch (InterfaceException e) {
+				e.printStackTrace();
 			}
+//			try {
+////				System.out.println("before mark"+executablePetriNet.getComponent(ARRIVED, Place.class).getTokenCount(DEFAULT));
+//				executablePetriNet.getComponent(ARRIVED, Place.class).setTokenCount(DEFAULT, 1);
+////				System.out.println("after mark"+executablePetriNet.getComponent(ARRIVED, Place.class).getTokenCount(DEFAULT));
+////				System.out.println("MoveExternalTransition.fire: arrives"+this.morseChannel.getStatus());
+//			} catch (PetriNetComponentNotFoundException e) {
+//				throw new RuntimeException("MoveExternalTransition.fire: attempted to mark "+ARRIVED+" place, but it was not found.");
+//			}
 		}
 	}
 
