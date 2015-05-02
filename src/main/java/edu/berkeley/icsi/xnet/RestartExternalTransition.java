@@ -15,7 +15,8 @@ public class RestartExternalTransition extends AbstractExternalTransition {
 
 	@Override
 	public void fire() {
-		this.morseChannel = (MorseChannel) getExternalTransitionProvider().getContext(); 
+		this.morseChannel = (MorseChannel) getExternalTransitionProvider().getContext();
+		this.morseChannel.setStatus(MorseChannel.RESTARTED);
 		this.morseChannel.getMorse().callMorse(buildMoveCommand()); 
 	}
 

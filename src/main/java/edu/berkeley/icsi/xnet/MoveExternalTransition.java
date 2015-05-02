@@ -28,28 +28,22 @@ public class MoveExternalTransition extends AbstractExternalTransition {
 
 	@Override
 	public void fire() {
-		this.morseChannel = (MorseChannel) getExternalTransitionProvider().getContext(); 
-		if (this.morseChannel.getStatus() == MorseChannel.NOT_STARTED) {
+		this.morseChannel = (MorseChannel) getExternalTransitionProvider().getContext();
+		int status = this.morseChannel.getStatus(); 
+		if ((status == MorseChannel.NOT_STARTED) ||
+			(status == MorseChannel.RESTARTED)) {
 			this.morseChannel.setStatus(MorseChannel.ONGOING); 
 			this.morseChannel.getMorse().callMorse(buildMoveCommand()); 
 		}
-		else if (this.morseChannel.getStatus() == MorseChannel.ONGOING) {
+		else if (status == MorseChannel.ONGOING) {
 			this.morseChannel.getMorse().callMorse(buildUpdatePositionCommand()); 
 		}
-		else if (this.morseChannel.getStatus() == MorseChannel.ARRIVED) {
+		else if (status == MorseChannel.ARRIVED) {
 			try {
 				getExternalTransitionProvider().getPlaceMarker().markPlace("Arrived", "Default", 2);
 			} catch (InterfaceException e) {
 				e.printStackTrace();
 			}
-//			try {
-////				System.out.println("before mark"+executablePetriNet.getComponent(ARRIVED, Place.class).getTokenCount(DEFAULT));
-//				executablePetriNet.getComponent(ARRIVED, Place.class).setTokenCount(DEFAULT, 1);
-////				System.out.println("after mark"+executablePetriNet.getComponent(ARRIVED, Place.class).getTokenCount(DEFAULT));
-////				System.out.println("MoveExternalTransition.fire: arrives"+this.morseChannel.getStatus());
-//			} catch (PetriNetComponentNotFoundException e) {
-//				throw new RuntimeException("MoveExternalTransition.fire: attempted to mark "+ARRIVED+" place, but it was not found.");
-//			}
 		}
 	}
 

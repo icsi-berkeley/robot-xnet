@@ -1,10 +1,14 @@
 package edu.berkeley.icsi.xnet;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class MorseChannel {
 	public static final int NOT_STARTED = 0;
 	public static final int ONGOING = 1;
 	public static final int ARRIVED = 2;
+	public static final int RESTARTED = 3;
 	private Morse morse;
 	private double currentY;
 	private double currentX;
@@ -26,7 +30,8 @@ public class MorseChannel {
 	public void updateCurrentLocation(double x, double y) {
 		this.currentX = x;
 		this.currentY = y; 
-		System.out.println("MorseChannel.updateCurrentLocation x: "+x+" y: "+y);
+		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSSSS").format(new Date(System.currentTimeMillis()))+
+				"MorseChannel.updateCurrentLocation x: "+x+" y: "+y);
 	}
 	public void updateTargetLocation(double x, double y) {
 		this.targetX = x;
@@ -67,7 +72,8 @@ public class MorseChannel {
 		return status ;
 	}
 	public void setStatus(int status) {
-		System.out.println("MorseChannel.setStatus: "+status);
+		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSSSS").format(new Date(System.currentTimeMillis()))+
+				"MorseChannel.setStatus: "+status);
 		this.status = status;
 	}
 }
