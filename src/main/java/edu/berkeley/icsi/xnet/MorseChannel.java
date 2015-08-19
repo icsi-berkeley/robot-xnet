@@ -30,8 +30,8 @@ public class MorseChannel {
 	public void updateCurrentLocation(double x, double y) {
 		this.currentX = x;
 		this.currentY = y; 
-		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSSSS").format(new Date(System.currentTimeMillis()))+
-				"MorseChannel.updateCurrentLocation x: "+x+" y: "+y);
+//		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSSSS").format(new Date(System.currentTimeMillis()))+
+//				"MorseChannel.updateCurrentLocation x: "+x+" y: "+y);
 	}
 	public void updateTargetLocation(double x, double y) {
 		this.targetX = x;
@@ -72,8 +72,8 @@ public class MorseChannel {
 		return status ;
 	}
 	public void setStatus(int status) {
-		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSSSS").format(new Date(System.currentTimeMillis()))+
-				"MorseChannel.setStatus: "+status);
+//		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSSSS").format(new Date(System.currentTimeMillis()))+
+//				"MorseChannel.setStatus: "+status);
 		this.status = status;
 	}
 }
