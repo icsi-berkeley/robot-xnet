@@ -9,6 +9,7 @@ import uk.ac.imperial.pipe.dsl.APetriNet;
 import uk.ac.imperial.pipe.dsl.APlace;
 import uk.ac.imperial.pipe.dsl.AToken;
 import uk.ac.imperial.pipe.dsl.AnImmediateTransition;
+import uk.ac.imperial.pipe.exceptions.PetriNetComponentException;
 import uk.ac.imperial.pipe.models.petrinet.ExecutablePetriNet;
 import uk.ac.imperial.pipe.models.petrinet.ExternalTransition;
 import uk.ac.imperial.pipe.models.petrinet.PetriNet;
@@ -38,7 +39,7 @@ public abstract class AbstractExternalTransitionTest {
 
 	protected abstract ExternalTransition buildExternalTransition(); 
 
-	private PetriNet buildNet() {
+	private PetriNet buildNet() throws PetriNetComponentException {
 		PetriNet net = APetriNet.named("testnet").and(AToken.called("Default").withColor(Color.BLACK)).and(APlace.withId("P0").containing(1, "Default").token()).
 				and(APlace.withId("Arrived")).and(APlace.withId("P1").externallyAccessible()).and(AnImmediateTransition.withId("T0")).
 				and(ANormalArc.withSource("P0").andTarget("T0").with("1", "Default").token()).
