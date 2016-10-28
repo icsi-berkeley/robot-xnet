@@ -25,87 +25,87 @@ import uk.ac.imperial.pipe.runner.PlaceMarker;
 public class MoveExternalTransitionTest extends AbstractExternalTransitionTest implements PlaceMarker {
 
 	@Test
-	public void verifyCallsMorseWithMoveCommand() {
+	public void verifyCallsMoverWithMoveCommand() {
 		setupInitialMove();
-		morseChannel.setMorse(morse); 
+		motionChannel.setMover(mover); 
 		externalTransition.fire();
-		assertTrue(morse.wasCalled()); 
-		assertEquals("{\"command\":\"moveMorse\",\"motion\":{\"x\":6.7,\"y\":8.9,\"z\":0.0,\"collide\":false,\"speed\":2.0,\"tolerance\":4.0}}", morse.lastCommand()); 
+		assertTrue(mover.wasCalled()); 
+		assertEquals("{\"command\":\"moveMover\",\"motion\":{\"x\":6.7,\"y\":8.9,\"z\":0.0,\"collide\":false,\"speed\":2.0,\"tolerance\":4.0}}", mover.lastCommand()); 
 	}
 	private void setupInitialMove() {
-		morseChannel.updateTargetLocation(6.7, 8.9); 
-		morseChannel.setSpeed(2.0); 
-		morseChannel.setTolerance(4.0);
-		morseChannel.setCollide(false);
+		motionChannel.updateTargetLocation(6.7, 8.9); 
+		motionChannel.setSpeed(2.0); 
+		motionChannel.setTolerance(4.0);
+		motionChannel.setCollide(false);
 	}
 	@Test
 	public void updatesCurrentAndTargetLocations() {
-		assertEquals(0.0, morseChannel.getCurrentX(), 0.01); 
-		assertEquals(0.0, morseChannel.getCurrentY(), 0.01); 
-		assertEquals(0.0, morseChannel.getTargetX(), 0.01); 
-		assertEquals(0.0, morseChannel.getTargetY(), 0.01); 
-		morseChannel.updateCurrentLocation(2.4, 3.0); 
-		assertEquals(2.4, morseChannel.getCurrentX(), 0.01); 
-		assertEquals(3.0, morseChannel.getCurrentY(), 0.01); 
-		morseChannel.updateTargetLocation(6.7, 8.9); 
-		assertEquals(6.7, morseChannel.getTargetX(), 0.01); 
-		assertEquals(8.9, morseChannel.getTargetY(), 0.01); 
+		assertEquals(0.0, motionChannel.getCurrentX(), 0.01); 
+		assertEquals(0.0, motionChannel.getCurrentY(), 0.01); 
+		assertEquals(0.0, motionChannel.getTargetX(), 0.01); 
+		assertEquals(0.0, motionChannel.getTargetY(), 0.01); 
+		motionChannel.updateCurrentLocation(2.4, 3.0); 
+		assertEquals(2.4, motionChannel.getCurrentX(), 0.01); 
+		assertEquals(3.0, motionChannel.getCurrentY(), 0.01); 
+		motionChannel.updateTargetLocation(6.7, 8.9); 
+		assertEquals(6.7, motionChannel.getTargetX(), 0.01); 
+		assertEquals(8.9, motionChannel.getTargetY(), 0.01); 
 	}
 	@Test
 	public void updatesOngoingStatusAndCommand() {
-		assertNull(morse.lastCommand()); 
-		assertEquals(MorseChannel.NOT_STARTED, morseChannel.getStatus());
-		morseChannel.updateTargetLocation(6.7, 8.9); 
+		assertNull(mover.lastCommand()); 
+		assertEquals(MotionChannel.NOT_STARTED, motionChannel.getStatus());
+		motionChannel.updateTargetLocation(6.7, 8.9); 
 		externalTransition.fire();
-		assertEquals(MorseChannel.ONGOING, morseChannel.getStatus());
+		assertEquals(MotionChannel.ONGOING, motionChannel.getStatus());
 	}
 	@Test
 	public void whileOngoingAfterFirstMoveCommandSubsequentCommandsAreToUpdatePosition() {
-		morseChannel.updateTargetLocation(6.7, 8.9); 
+		motionChannel.updateTargetLocation(6.7, 8.9); 
 		externalTransition.fire();
-		assertEquals(MorseChannel.ONGOING, morseChannel.getStatus());
-		assertEquals("{\"command\":\"moveMorse\",\"motion\":{\"x\":6.7,\"y\":8.9,\"z\":0.0,\"collide\":false,\"speed\":0.0,\"tolerance\":0.0}}", morse.lastCommand()); 
+		assertEquals(MotionChannel.ONGOING, motionChannel.getStatus());
+		assertEquals("{\"command\":\"moveMover\",\"motion\":{\"x\":6.7,\"y\":8.9,\"z\":0.0,\"collide\":false,\"speed\":0.0,\"tolerance\":0.0}}", mover.lastCommand()); 
 		externalTransition.fire();
-		assertEquals(MorseChannel.ONGOING, morseChannel.getStatus());
-		assertEquals("{\"command\":\"updateMorsePosition\"}", morse.lastCommand()); 
+		assertEquals(MotionChannel.ONGOING, motionChannel.getStatus());
+		assertEquals("{\"command\":\"updateMoverPosition\"}", mover.lastCommand()); 
 	}
 	@Test
 	public void whenStatusIsArrivedMarksArrivedPlace() throws Exception {
 		assertEquals(0, epn.getComponent("Arrived", Place.class).getTokenCount("Default")); 
-		morseChannel.setStatus(MorseChannel.ARRIVED);
+		motionChannel.setStatus(MotionChannel.ARRIVED);
 		externalTransitionProvider.setPlaceMarker(this);
 		externalTransition.fire();
-		assertFalse(morse.wasCalled());
+		assertFalse(mover.wasCalled());
 		assertEquals(1, epn.getComponent("Arrived", Place.class).getTokenCount("Default"));
 	}
 	@Test
 	public void whenStatusIsRestartGeneratesNewMoveCommand() throws Exception {
-		morseChannel.updateTargetLocation(3.3, 4.4); 
-		morseChannel.setSpeed(2.0); 
-		morseChannel.setTolerance(4.0);
-		morseChannel.setCollide(false);
-		morseChannel.setMorse(morse); 
-		morseChannel.setStatus(MorseChannel.RESTARTED);
+		motionChannel.updateTargetLocation(3.3, 4.4); 
+		motionChannel.setSpeed(2.0); 
+		motionChannel.setTolerance(4.0);
+		motionChannel.setCollide(false);
+		motionChannel.setMover(mover); 
+		motionChannel.setStatus(MotionChannel.RESTARTED);
 		externalTransition.fire();
-		assertTrue(morse.wasCalled()); 
-		assertEquals("{\"command\":\"moveMorse\",\"motion\":{\"x\":3.3,\"y\":4.4,\"z\":0.0,\"collide\":false,\"speed\":2.0,\"tolerance\":4.0}}", morse.lastCommand()); 
+		assertTrue(mover.wasCalled()); 
+		assertEquals("{\"command\":\"moveMover\",\"motion\":{\"x\":3.3,\"y\":4.4,\"z\":0.0,\"collide\":false,\"speed\":2.0,\"tolerance\":4.0}}", mover.lastCommand()); 
 	}
 	@Test
 	public void updatedMotionIgnoredUntilStatusChangesToRestart() throws Exception {
 		setupInitialMove();
-		morseChannel.setMorse(morse); 
+		motionChannel.setMover(mover); 
 		externalTransition.fire();
-		assertTrue(morse.wasCalled()); 
-		assertEquals("{\"command\":\"moveMorse\",\"motion\":{\"x\":6.7,\"y\":8.9,\"z\":0.0,\"collide\":false,\"speed\":2.0,\"tolerance\":4.0}}", morse.lastCommand()); 
-		morseChannel.updateTargetLocation(3.3, 4.4); 
+		assertTrue(mover.wasCalled()); 
+		assertEquals("{\"command\":\"moveMover\",\"motion\":{\"x\":6.7,\"y\":8.9,\"z\":0.0,\"collide\":false,\"speed\":2.0,\"tolerance\":4.0}}", mover.lastCommand()); 
+		motionChannel.updateTargetLocation(3.3, 4.4); 
 		externalTransition.fire();
-		assertEquals("update ignored",MorseChannel.ONGOING, morseChannel.getStatus());
-		assertEquals("{\"command\":\"updateMorsePosition\"}", morse.lastCommand()); 
-		morseChannel.setStatus(MorseChannel.RESTARTED);
-		assertEquals("implies RestartExternalTransition has fired",MorseChannel.RESTARTED, morseChannel.getStatus());
+		assertEquals("update ignored",MotionChannel.ONGOING, motionChannel.getStatus());
+		assertEquals("{\"command\":\"updateMoverPosition\"}", mover.lastCommand()); 
+		motionChannel.setStatus(MotionChannel.RESTARTED);
+		assertEquals("implies RestartExternalTransition has fired",MotionChannel.RESTARTED, motionChannel.getStatus());
 		externalTransition.fire();
-		assertEquals("{\"command\":\"moveMorse\",\"motion\":{\"x\":3.3,\"y\":4.4,\"z\":0.0,\"collide\":false,\"speed\":2.0,\"tolerance\":4.0}}", morse.lastCommand()); 
-		assertEquals("new motion in progress",MorseChannel.ONGOING, morseChannel.getStatus());
+		assertEquals("{\"command\":\"moveMover\",\"motion\":{\"x\":3.3,\"y\":4.4,\"z\":0.0,\"collide\":false,\"speed\":2.0,\"tolerance\":4.0}}", mover.lastCommand()); 
+		assertEquals("new motion in progress",MotionChannel.ONGOING, motionChannel.getStatus());
 	}
 	
 	@Override

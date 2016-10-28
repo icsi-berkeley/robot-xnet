@@ -13,8 +13,8 @@ public class MoveExternalTransition extends AbstractExternalTransition {
 
 
 	private static final String COMMAND = "command";
-	private static final String MOVE = "moveMorse";
-	private static final String UPDATE_POSITION = "updateMorsePosition";
+	private static final String MOVE = "moveMover";
+	private static final String UPDATE_POSITION = "updateMoverPosition";
 	private static final String MOTION = "motion";
 	private static final String X = "x";
 	private static final String Y = "y";
@@ -24,21 +24,21 @@ public class MoveExternalTransition extends AbstractExternalTransition {
 	private static final String COLLIDE = "collide";
 	protected static final String ARRIVED = "Arrived";
 	protected static final String DEFAULT = "Default";
-	private MorseChannel morseChannel;
+	private MotionChannel motionChannel;
 
 	@Override
 	public void fire() {
-		this.morseChannel = (MorseChannel) getExternalTransitionProvider().getContext();
-		int status = this.morseChannel.getStatus(); 
-		if ((status == MorseChannel.NOT_STARTED) ||
-			(status == MorseChannel.RESTARTED)) {
-			this.morseChannel.setStatus(MorseChannel.ONGOING); 
-			this.morseChannel.getMorse().callMorse(buildMoveCommand()); 
+		this.motionChannel = (MotionChannel) getExternalTransitionProvider().getContext();
+		int status = this.motionChannel.getStatus(); 
+		if ((status == MotionChannel.NOT_STARTED) ||
+			(status == MotionChannel.RESTARTED)) {
+			this.motionChannel.setStatus(MotionChannel.ONGOING); 
+			this.motionChannel.getMover().callMover(buildMoveCommand()); 
 		}
-		else if (status == MorseChannel.ONGOING) {
-			this.morseChannel.getMorse().callMorse(buildUpdatePositionCommand()); 
+		else if (status == MotionChannel.ONGOING) {
+			this.motionChannel.getMover().callMover(buildUpdatePositionCommand()); 
 		}
-		else if (status == MorseChannel.ARRIVED) {
+		else if (status == MotionChannel.ARRIVED) {
 			try {
 				getExternalTransitionProvider().getPlaceMarker().markPlace("Arrived", "Default", 2);
 			} catch (InterfaceException e) {
@@ -58,12 +58,12 @@ public class MoveExternalTransition extends AbstractExternalTransition {
 		JsonObject command = Json.createObjectBuilder()
 				.add(COMMAND, MOVE)
 				.add(MOTION, Json.createObjectBuilder()
-						.add(X, this.morseChannel.getTargetX())
-						.add(Y, this.morseChannel.getTargetY())
+						.add(X, this.motionChannel.getTargetX())
+						.add(Y, this.motionChannel.getTargetY())
 						.add(Z, 0.0d)
-						.add(COLLIDE, this.morseChannel.isCollide())
-						.add(SPEED, this.morseChannel.getSpeed())
-						.add(TOLERANCE, this.morseChannel.getTolerance())
+						.add(COLLIDE, this.motionChannel.isCollide())
+						.add(SPEED, this.motionChannel.getSpeed())
+						.add(TOLERANCE, this.motionChannel.getTolerance())
 						.build())
 				.build();
 		return command.toString();

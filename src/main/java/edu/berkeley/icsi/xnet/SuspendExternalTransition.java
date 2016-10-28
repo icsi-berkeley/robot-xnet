@@ -9,13 +9,13 @@ public class SuspendExternalTransition extends AbstractExternalTransition {
 
 
 	private static final String COMMAND = "command";
-	private static final String SUSPEND = "suspendMorse";
-	private MorseChannel morseChannel;
+	private static final String SUSPEND = "suspendMover";
+	private MotionChannel motionChannel;
 
 	@Override
 	public void fire() {
-		this.morseChannel = (MorseChannel) getExternalTransitionProvider().getContext(); 
-		this.morseChannel.getMorse().callMorse(buildMoveCommand()); 
+		this.motionChannel = (MotionChannel) getExternalTransitionProvider().getContext(); 
+		this.motionChannel.getMover().callMover(buildMoveCommand()); 
 	}
 
 	private String buildMoveCommand() {

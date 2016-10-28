@@ -22,10 +22,10 @@ public class SuspendExternalTransitionTest extends AbstractExternalTransitionTes
 
 	@Test
 	public void verifyCallsMorseWithSuspendCommand() {
-		morseChannel.setMorse(morse); 
+		motionChannel.setMover(mover); 
 		externalTransition.fire();
-		assertTrue(morse.wasCalled()); 
-		assertEquals("{\"command\":\"suspendMorse\"}", morse.lastCommand()); 
+		assertTrue(mover.wasCalled()); 
+		assertEquals("{\"command\":\"suspendMover\"}", mover.lastCommand()); 
 	}
 
 	@Override

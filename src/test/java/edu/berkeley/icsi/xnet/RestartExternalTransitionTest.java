@@ -12,13 +12,13 @@ public class RestartExternalTransitionTest  extends AbstractExternalTransitionTe
 	@Test
 	public void verifyCallsMorseWithSuspendCommand() {
 		externalTransition.fire();
-		assertTrue(morse.wasCalled()); 
-		assertEquals("{\"command\":\"restartMorse\"}", morse.lastCommand()); 
+		assertTrue(mover.wasCalled()); 
+		assertEquals("{\"command\":\"restartMover\"}", mover.lastCommand()); 
 	}
 	@Test
 	public void verifySetsMorseChannelStatusToRestart() {
 		externalTransition.fire();
-		assertEquals(MorseChannel.RESTARTED, morseChannel.getStatus());
+		assertEquals(MotionChannel.RESTARTED, motionChannel.getStatus());
 	}
 
 	@Override

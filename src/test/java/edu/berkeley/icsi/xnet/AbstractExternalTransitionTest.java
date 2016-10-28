@@ -19,8 +19,8 @@ public abstract class AbstractExternalTransitionTest {
 	protected ExternalTransition externalTransition;
 	private PetriNet net;
 	protected ExecutablePetriNet epn;
-	protected MorseChannel morseChannel;
-	protected TestingMorse morse;
+	protected MotionChannel motionChannel;
+	protected TestingMover mover;
 	protected TestingExternalTransitionProvider externalTransitionProvider;
 
 	@Before
@@ -30,11 +30,11 @@ public abstract class AbstractExternalTransitionTest {
 		externalTransitionProvider = new TestingExternalTransitionProvider();
 		externalTransition = buildExternalTransition();
 		externalTransitionProvider.setExecutablePetriNet(epn);
-		morseChannel = new MorseChannel(); 
-		externalTransitionProvider.setContext(morseChannel);
+		motionChannel = new MotionChannel(); 
+		externalTransitionProvider.setContext(motionChannel);
 		externalTransition.setExternalTransitionProvider(externalTransitionProvider);
-		morse = new TestingMorse();
-		morseChannel.setMorse(morse); 
+		mover = new TestingMover();
+		motionChannel.setMover(mover); 
 	}
 
 	protected abstract ExternalTransition buildExternalTransition(); 
