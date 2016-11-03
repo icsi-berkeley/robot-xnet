@@ -20,8 +20,26 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
-    </repositories>
+        
+        <repository>
+            <id>PIPECore-mvn-repo</id>
+            <url>https://raw.github.com/sarahtattersall/PIPECore/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
 
+        <repository>
+            <id>PIPEMarkovChain-mvn-repo</id>
+            <url>https://raw.github.com/sarahtattersall/PIPEMarkovChain/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+        
     <dependencies>
         <dependency>
             <groupId>uk.ac.imperial</groupId>
